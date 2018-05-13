@@ -89,7 +89,7 @@ def main():
 
     client = Bot()
 
-    client.run(config['token'], bot=False)
+    client.run(config['token'], bot=True)
 
 
 if __name__ == '__main__':
