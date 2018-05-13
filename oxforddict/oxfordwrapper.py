@@ -8,7 +8,6 @@ class OxfordDictionary(object):
     """Simple wrapper for Oxford Dictionary API
     Address: https://www.oxforddictionaries.com/
     API reference: https://developer.oxforddictionaries.com/documentation
-
     """
 
     __slots__ = ('app_key', 'app_id', 'lang', '_httpsconn', '_base_url')

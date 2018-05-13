@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import asyncio
 import json
 import os
@@ -8,7 +10,7 @@ import discord
 from oxforddict import OxfordDictionary as ox
 from oxforddict.exceptions import *
 
-with open('config.json') as f:
+with open('/home/pi/lib/DictionaryBot/config.json') as f:
     config = json.load(f)
 
 dictionary = ox(app_key=config['app_key'], app_id=config['app_id'])
@@ -24,19 +26,18 @@ class Bot(discord.Client):
         print('------')
 
     async def on_message(self, message):
-        if message.author == self.user:
-            content = message.content  # type: str
-
-            if content.startswith('>tex'):
-                content = content[4:].strip()
-                image_file = await compile_tex(content)
-                await self.send_file(message.channel, image_file)
-            elif content.startswith('>antonyms'):
-                await handle_word(self, message, content[1:9])
-            elif content.startswith('>synonyms'):
-                await handle_word(self, message, content[1:9])
-            elif content.startswith('>definition'):
-                await handle_word(self, message, content[1:11])
+        content = message.content  # type: str
+        if content.startswith('>antonyms'):
+            await handle_word(self, message, content[1:9])
+        elif content.startswith('>synonyms'):
+            await handle_word(self, message, content[1:9])
+        elif content.startswith('>definition'):
+            await handle_word(self, message, content[1:11])
+        # use lemmatron
+        elif content.startswith('>search'):
+            await handle_word(self, message, content[1:7])
+        elif content.startswith('>translate'):
+            await handle_word(self, message, content[1:10])
 
 
 async def handle_word(self, message, command):
@@ -83,13 +84,17 @@ def get_dict(command, word):
         return temp;
     return {}
 
-def main():
+class EmbedPaginator:
+    def __init__(self, pagenumber=1, ):
+        self.pagenumber = pagenumber
 
-    os.makedirs('tmp', exist_ok=True)
+
+
+def main():
 
     client = Bot()
 
-    client.run(config['token'], bot=False)
+    client.run(config['token'], bot=True)
 
 
 if __name__ == '__main__':
