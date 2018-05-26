@@ -355,6 +355,7 @@ TSWLatexianTemp*
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
+.gradle/
 
 # CMake
 cmake-build-debug/
@@ -388,4 +389,3 @@ fabric.properties
 ## Project specific
 
 /config.json
-/tmp

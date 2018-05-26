@@ -1,0 +1,30 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20180130'
+    compile 'net.dv8tion:JDA:3.6.0_367'
+    compile 'com.jagrosh:jda-utilities:2.1.1'
+
+}
+
+repositories {
+    jcenter()
+}
+
+version = '1.0.0'
+
+sourceSets {
+    main.java.srcDir "src/main/java/"
+}
+
+jar {
+
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
+
+}
