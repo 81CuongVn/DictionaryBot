@@ -7,7 +7,7 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20180130'
     compile 'net.dv8tion:JDA:3.6.0_367'
     compile 'com.jagrosh:jda-utilities:2.1.1'
-
+    compile files('OxfordDictionaryJavaWrapper-1.0.1.jar')
 }
 
 repositories {
