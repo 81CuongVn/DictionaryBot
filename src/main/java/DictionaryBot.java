@@ -3,6 +3,8 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import commands.AboutCommand;
 import commands.DefineCommand;
+import commands.DiscordAsOutputStream;
+import commands.SynonymCommand;
 import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.User;
@@ -13,11 +15,14 @@ import tech.thewithz.oxforddict.OxfordDictionaryBuilder;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
 public class DictionaryBot {
+
+	public static JDA jda;
 
 	public static void main(String[] args) throws IOException, LoginException, IllegalArgumentException {
 		JSONObject obj = new JSONObject(new String(Files.readAllBytes(Paths.get("config.json"))));
@@ -40,14 +45,17 @@ public class DictionaryBot {
 
 		Command[] commands = {new AboutCommand(Color.BLUE,
 		                                       new String[]{"Defines a word}"},
-		                                       Permission.ADMINISTRATOR), new DefineCommand(dict, waiter)};
+		                                       Permission.ADMINISTRATOR), new DefineCommand(dict,
+		                                                                                    waiter), new SynonymCommand(
+				dict,
+				waiter)};
 
 		client.setHelpConsumer((event) -> {
 			StringBuilder builder = new StringBuilder("**commands:**\n");
 			Command.Category category = null;
-			for (Command command : commands) {
-				if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
-					if (!Objects.equals(category, command.getCategory())) {
+			for(Command command : commands) {
+				if(!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
+					if(!Objects.equals(category, command.getCategory())) {
 						category = command.getCategory();
 						builder.append("\n\n  __")
 						       .append(category == null ? "No Category" : category.getName())
@@ -63,7 +71,7 @@ public class DictionaryBot {
 			}
 			User owner = event.getJDA()
 			                  .getUserById("122764399961309184");
-			if (owner != null) {
+			if(owner != null) {
 				builder.append("\n\nFor additional help, contact **")
 				       .append(owner.getName())
 				       .append("**#")
@@ -74,16 +82,11 @@ public class DictionaryBot {
 		});
 
 		client.addCommands(commands);
-
-		new JDABuilder(AccountType.BOT).setToken(obj.getString("token"))
-
+		jda = new JDABuilder(AccountType.BOT).setToken(obj.getString("token"))
 		                               .setStatus(OnlineStatus.DO_NOT_DISTURB)
 		                               .setGame(Game.playing("loading..."))
-
 		                               .addEventListener(waiter)
 		                               .addEventListener(client.build())
-
 		                               .buildAsync();
-
 	}
 }
